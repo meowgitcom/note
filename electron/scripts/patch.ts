@@ -25,13 +25,13 @@ cpSync(EXPO_DIR, EXPO_PATCHED_DIR, {
     const relativeSrc = relative(EXPO_DIR, src)
     // Skip these directories
     const skipDirs = ["node_modules", ".expo", "android", "ios", "dist", ".git"]
-    
+
     for (const skipDir of skipDirs) {
       if (relativeSrc === skipDir || relativeSrc.startsWith(skipDir + "/")) {
         return false
       }
     }
-    
+
     return true
   },
 })
@@ -47,7 +47,7 @@ if (!existsSync(PATCHES_DIR)) {
 const patches = readdirSync(PATCHES_DIR, { withFileTypes: true })
 let patchCount = 0
 
-console.log(`📋 Found ${patches.filter(p => p.isDirectory()).length} patch(es) to apply`)
+console.log(`📋 Found ${patches.filter((p) => p.isDirectory()).length} patch(es) to apply`)
 
 for (const patch of patches) {
   if (!patch.isDirectory()) continue

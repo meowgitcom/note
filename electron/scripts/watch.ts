@@ -1,11 +1,11 @@
 #!/usr/bin/env bun
-import chokidar from "chokidar"
-import { cpSync, existsSync, readdirSync } from "node:fs"
-import { join, resolve, relative } from "node:path"
+import { watch } from "fs"
+import { cpSync, existsSync, readdirSync } from "fs"
+import { join, resolve, relative } from "path"
 
-const PATCHES_DIR = resolve(__dirname, "../patches")
-const EXPO_DIR = resolve(__dirname, "../../expo")
-const EXPO_PATCHED_DIR = resolve(__dirname, "../expo-patched")
+const PATCHES_DIR = resolve(import.meta.dir, "../patches")
+const EXPO_DIR = resolve(import.meta.dir, "../../expo")
+const EXPO_PATCHED_DIR = resolve(import.meta.dir, "../expo-patched")
 
 console.log("👀 Watching Expo app for changes...")
 
@@ -15,7 +15,7 @@ const patchedFiles = new Set<string>()
 if (existsSync(PATCHES_DIR)) {
   const collectPatchedFiles = (dir: string, baseDir: string = dir) => {
     const entries = readdirSync(dir, { withFileTypes: true })
-    
+
     for (const entry of entries) {
       const fullPath = join(dir, entry.name)
       if (entry.isDirectory()) {
@@ -28,7 +28,7 @@ if (existsSync(PATCHES_DIR)) {
   }
 
   const patches = readdirSync(PATCHES_DIR, { withFileTypes: true })
-  
+
   for (const patch of patches) {
     if (!patch.isDirectory()) continue
     collectPatchedFiles(join(PATCHES_DIR, patch.name))
@@ -37,22 +37,22 @@ if (existsSync(PATCHES_DIR)) {
 
 console.log(`📋 Ignoring ${patchedFiles.size} patched file(s)`)
 
-// Watch for changes with chokidar
-const watcher = chokidar.watch(EXPO_DIR, {
-  ignored: [
-    "**/node_modules/**",
-    "**/.expo/**",
-    "**/android/**",
-    "**/ios/**",
-    "**/dist/**",
-    "**/.git/**",
-  ],
-  persistent: true,
-  ignoreInitial: true,
-})
+// Watch for changes using Bun's native fs.watch
+const watcher = watch(EXPO_DIR, { recursive: true }, (event, filename) => {
+  if (!filename) return
 
-watcher.on("change", (path) => {
-  const filename = relative(EXPO_DIR, path)
+  // Skip temp files created by editors
+  if (filename.endsWith("~") || filename.includes("/.") || /\/\d+$/.test(filename)) {
+    return
+  }
+
+  // Skip these directories
+  const skipDirs = ["node_modules", ".expo", "android", "ios", "dist", ".git"]
+  for (const skipDir of skipDirs) {
+    if (filename === skipDir || filename.startsWith(skipDir + "/")) {
+      return
+    }
+  }
 
   // Skip patched files
   if (patchedFiles.has(filename)) {
@@ -60,21 +60,25 @@ watcher.on("change", (path) => {
     return
   }
 
+  const sourcePath = join(EXPO_DIR, filename)
   const targetPath = join(EXPO_PATCHED_DIR, filename)
 
+  // Check if file still exists (might be deleted or temp file)
+  if (!existsSync(sourcePath)) {
+    return
+  }
+
   try {
-    cpSync(path, targetPath, { force: true })
+    cpSync(sourcePath, targetPath, { force: true })
     console.log(`🔄 Synced: ${filename}`)
   } catch (error) {
     console.error(`❌ Failed to sync ${filename}:`, error)
   }
 })
 
-watcher.on("ready", () => {
-  console.log("✅ Watching for changes... (Ctrl+C to stop)")
-})
+console.log("✅ Watching for changes... (Ctrl+C to stop)")
 
-// Keep process alive
+// Keep process alive and handle cleanup
 process.on("SIGINT", () => {
   console.log("\n👋 Stopping file watcher...")
   watcher.close()
