@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "open[note]",
+    "slug": "opennote",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "scheme": "opennote",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aquaticcalf.opennote"
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.aquaticcalf.opennote"
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": ["expo-font"]
+  }
+}
