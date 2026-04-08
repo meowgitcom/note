@@ -1,0 +1,5 @@
+# Electron patches directory
+# Place folders here to override files in the Expo app
+
+# Each folder represents a patch that will be copied to ../expo/
+# Example: patches/filesystem/lib/file.ts -> ../expo/lib/file.ts
