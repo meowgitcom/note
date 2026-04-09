@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "cd electron && bun dev",
-    "expo": "cd expo && bun dev"
+    "expo": "cd expo && bun dev",
+    "fix": "cd expo && bun fix && cd ../electron && bun fix"
   }
 }
