@@ -1,6 +1,6 @@
 import { useColorScheme } from "react-native"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
-import Routes from "@/config/routes"
+import Routes from "@/routes"
 import { useFonts, Geist_400Regular } from "@expo-google-fonts/geist"
 import { GeistMono_400Regular } from "@expo-google-fonts/geist-mono"
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper"
