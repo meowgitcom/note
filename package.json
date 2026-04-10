@@ -3,8 +3,8 @@
   "private": true,
   "workspaces": ["api", "electron", "env", "expo"],
   "scripts": {
-    "dev": "cd electron && bun dev",
-    "expo": "cd expo && bun dev",
-    "fix": "cd expo && bun fix && cd ../electron && bun fix"
+    "dev": "bun run --filter electron --if-present dev",
+    "expo": "bun run --filter expo --if-present dev",
+    "fix": "bun run --workspaces --sequential --if-present fix"
   }
 }
