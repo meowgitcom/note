@@ -1,5 +1,5 @@
 {
-  "name": "opennote-electron",
+  "name": "electron",
   "version": "0.0.0",
   "private": true,
   "main": "dist/main.js",
