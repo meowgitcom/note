@@ -6,6 +6,9 @@
   "scripts": {
     "fix": "oxfmt -c ../config/oxfmt.json && oxlint -c ../config/oxlint.json --fix && tsc --noEmit"
   },
+  "dependencies": {
+    "elysia": "^1.4.28"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "oxfmt": "^0.44.0",
