@@ -5,7 +5,8 @@
     "api",
     "electron",
     "env",
-    "expo"
+    "expo",
+    "db"
   ],
   "scripts": {
     "dev": "bun run --filter electron --if-present dev",
