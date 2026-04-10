@@ -4,6 +4,10 @@
   "workspaces": {
     "": {
       "name": "opennote",
+      "devDependencies": {
+        "@types/bun": "^1.3.11",
+        "typescript": "^5.7.2",
+      },
     },
     "api": {
       "name": "api",
