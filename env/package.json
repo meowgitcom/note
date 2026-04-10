@@ -4,7 +4,8 @@
   "type": "module",
   "module": "index.ts",
   "scripts": {
-    "fix": "oxfmt -c ../config/oxfmt.json && oxlint -c ../config/oxlint.json --fix && tsc --noEmit"
+    "fix": "oxfmt -c ../config/oxfmt.json && oxlint -c ../config/oxlint.json --fix && tsc --noEmit",
+    "setup": "bun setup.ts"
   },
   "dependencies": {
     "@t3-oss/env-core": "^0.13.11",

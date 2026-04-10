@@ -1,10 +1,16 @@
 {
   "name": "opennote",
   "private": true,
-  "workspaces": ["api", "electron", "env", "expo"],
+  "workspaces": [
+    "api",
+    "electron",
+    "env",
+    "expo"
+  ],
   "scripts": {
     "dev": "bun run --filter electron --if-present dev",
     "expo": "bun run --filter expo --if-present dev",
+    "setup": "bun run --workspaces --sequential --if-present setup",
     "fix": "bun run --workspaces --sequential --if-present fix"
   }
 }
