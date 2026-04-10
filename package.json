@@ -1,4 +1,7 @@
 {
+  "name": "opennote",
+  "private": true,
+  "workspaces": ["api", "electron", "env", "expo"],
   "scripts": {
     "dev": "cd electron && bun dev",
     "expo": "cd expo && bun dev",
