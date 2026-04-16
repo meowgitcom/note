@@ -1,19 +1,19 @@
 {
   "expo": {
     "name": "meow[note]",
-    "slug": "opennote",
+    "slug": "meownote",
     "version": "0.0.0",
     "orientation": "portrait",
-    "scheme": "opennote",
+    "scheme": "meownote",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aquaticcalf.opennote"
+      "bundleIdentifier": "com.meowgit.opennote"
     },
     "android": {
       "edgeToEdgeEnabled": true,
-      "package": "com.aquaticcalf.opennote"
+      "package": "com.meowgit.opennote"
     },
     "web": {
       "bundler": "metro",
