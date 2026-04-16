@@ -1,19 +1,23 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core"
 import { pages } from "../app/page"
 import { columns } from "./column"
-import { relations } from "./relation"
 
 export const rollups = sqliteTable("rollups", {
   id: text("id").primaryKey(),
   pageId: text("page_id")
     .notNull()
     .references(() => pages.id),
+
+  // The rollup property itself.
   columnId: text("column_id")
     .notNull()
     .references(() => columns.id),
-  relationId: text("relation_id")
+
+  // The relation property this rollup aggregates over.
+  relationColumnId: text("relation_column_id")
     .notNull()
-    .references(() => relations.columnId),
+    .references(() => columns.id),
+
   aggregateType: text("aggregate_type", {
     enum: ["sum", "count", "average", "min", "max"],
   })
