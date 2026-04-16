@@ -4,7 +4,7 @@ import { Text } from "react-native-paper"
 export default function Routes() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>open[note]</Text>
+      <Text style={styles.title}>meow[note]</Text>
     </View>
   )
 }

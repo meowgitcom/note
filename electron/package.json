@@ -30,7 +30,7 @@
   },
   "build": {
     "appId": "click.opennote.opennote",
-    "productName": "open[note]",
+    "productName": "meow[note]",
     "directories": {
       "output": "build"
     },

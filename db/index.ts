@@ -1,1 +1,1 @@
-console.log("open[note] db")
+console.log("meow[note] db")

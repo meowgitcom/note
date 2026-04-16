@@ -1,16 +1,16 @@
-# open[note] Electron
+# meow[note] Electron
 
-Electron wrapper for the open[note] Expo app.
+Electron wrapper for the meow[note] Expo app.
 
 ## Architecture
 
-This Electron app uses open[note] Expo app as the frontend, allowing you to share code between mobile, web, and desktop platforms. The patch system allows you to override open[note] Expo app files with Electron-specific implementations for native features.
+This Electron app uses meow[note] Expo app as the frontend, allowing you to share code between mobile, web, and desktop platforms. The patch system allows you to override meow[note] Expo app files with Electron-specific implementations for native features.
 
 ## How It Works
 
 1. **Copy-Based Patch System**:
    - Creates `electron/expo-patched/` directory
-   - **Copies** entire open[note] Expo app (excluding node_modules, .expo, android, ios, dist)
+   - **Copies** entire meow[note] Expo app (excluding node_modules, .expo, android, ios, dist)
    - **Overlays** patch files on top
    - The original Expo app is **never modified**
    - A file watcher syncs changes from `../expo/` to `expo-patched/`

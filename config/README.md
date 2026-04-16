@@ -1,1 +1,1 @@
-## open[note] config
+## meow[note] config
