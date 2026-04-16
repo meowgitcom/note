@@ -1,5 +1,5 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core"
-import { tables } from "./tables"
+import { tables } from "./table"
 import { pages } from "../app/page"
 
 export const rows = sqliteTable("rows", {
