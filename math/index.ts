@@ -1,1 +1,1 @@
-console.log("math")
+export * from "./blocks"
