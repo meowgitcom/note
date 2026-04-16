@@ -1,0 +1,17 @@
+{
+  "name": "math",
+  "private": true,
+  "type": "module",
+  "module": "index.ts",
+  "scripts": {
+    "fix": "oxfmt -c ../config/oxfmt.json && oxlint -c ../config/oxlint.json --fix && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "oxfmt": "^0.45.0",
+    "oxlint": "^1.60.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
