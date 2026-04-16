@@ -10,7 +10,7 @@ import { midpoint, shiftBackward, shiftForward } from "./engine.ts"
 export const validatePosition = (position: string): void => {
   const { base, fraction } = splitPosition(position)
   if (base === MIN_BASE_TOKEN && fraction.length === 0)
-    throw new Error(`Limit reached: ${position}`)
+    throw new Error(`Limit reached : ${position}`)
   validateBaseToken(base)
   validateFraction(fraction)
 }

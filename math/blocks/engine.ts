@@ -16,8 +16,8 @@ export const midpoint = (left: string, right: string | null): string => {
 
   const leftIdx = left ? CHARS.indexOf(left[0]!) : 0
   const rightIdx = right !== null ? CHARS.indexOf(right[0]!) : CHARS.length
-  if (leftIdx < 0) throw new Error(`Invalid character in left: ${left[0]}`)
-  if (right !== null && rightIdx < 0) throw new Error(`Invalid character in right: ${right[0]}`)
+  if (leftIdx < 0) throw new Error(`Invalid character in left : ${left[0]}`)
+  if (right !== null && rightIdx < 0) throw new Error(`Invalid character in right : ${right[0]}`)
 
   if (rightIdx - leftIdx > 1) {
     return CHARS[Math.round((leftIdx + rightIdx) / 2)]!
@@ -37,7 +37,7 @@ export const shiftForward = (token: string): string | null => {
 
   for (let i = chars.length - 1; i >= 0 && requiresCarry; i--) {
     const currentIdx = CHARS.indexOf(chars[i]!)
-    if (currentIdx < 0) throw new Error(`Invalid character in token: ${token}`)
+    if (currentIdx < 0) throw new Error(`Invalid character in token : ${token}`)
     const nextIdx = currentIdx + 1
     if (nextIdx === CHARS.length) {
       chars[i] = ZERO
@@ -68,7 +68,7 @@ export const shiftBackward = (token: string): string | null => {
 
   for (let i = chars.length - 1; i >= 0 && requiresBorrow; i--) {
     const currentIdx = CHARS.indexOf(chars[i]!)
-    if (currentIdx < 0) throw new Error(`Invalid character in token: ${token}`)
+    if (currentIdx < 0) throw new Error(`Invalid character in token : ${token}`)
     const prevIdx = currentIdx - 1
     if (prevIdx === -1) {
       chars[i] = MAX_CHAR

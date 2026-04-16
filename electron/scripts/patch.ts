@@ -55,7 +55,7 @@ for (const patch of patches) {
   const patchPath = join(PATCHES_DIR, patch.name)
   const targetPath = EXPO_PATCHED_DIR
 
-  console.log(`📦 Applying patch: ${patch.name}`)
+  console.log(`📦 Applying patch : ${patch.name}`)
 
   try {
     cpSync(patchPath, targetPath, {
@@ -68,7 +68,7 @@ for (const patch of patches) {
     patchCount++
     console.log(`  ✅ Applied ${patch.name}`)
   } catch (error) {
-    console.error(`  ❌ Failed to apply ${patch.name}:`, error)
+    console.error(`  ❌ Failed to apply ${patch.name} : `, error)
     process.exit(1)
   }
 }

@@ -1,6 +1,6 @@
 // This is an example Electron-specific file implementation
-// Place this in: electron/patches/example-filesystem/lib/filesystem.ts
-// It will override: expo/lib/filesystem.ts
+// Place this in : electron/patches/example-filesystem/lib/filesystem.ts
+// It will override : expo/lib/filesystem.ts
 
 export interface FileSystem {
   readFile(path: string): Promise<string>

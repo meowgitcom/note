@@ -70,9 +70,9 @@ const watcher = watch(EXPO_DIR, { recursive: true }, (event, filename) => {
 
   try {
     cpSync(sourcePath, targetPath, { force: true })
-    console.log(`🔄 Synced: ${filename}`)
+    console.log(`🔄 Synced : ${filename}`)
   } catch (error) {
-    console.error(`❌ Failed to sync ${filename}:`, error)
+    console.error(`❌ Failed to sync ${filename} : `, error)
   }
 })
 

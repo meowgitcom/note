@@ -48,7 +48,7 @@ for (const line of lines) {
   } else if (has_overrides || skip) {
     new_value = ""
   } else {
-    const input = await prompt(`${key}=${current_value || "(empty)"}: `)
+    const input = await prompt(`${key}=${current_value || "(empty)"} : `)
     new_value = input ?? ""
   }
 
