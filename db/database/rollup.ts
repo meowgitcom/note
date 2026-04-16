@@ -18,7 +18,7 @@ export const rollups = sqliteTable("rollups", {
     enum: ["sum", "count", "average", "min", "max"],
   })
     .notNull()
-    .default("sum"),
+    .default("count"),
   value: text("value", { mode: "json" }).$type<number | string | null>().default(null),
 })
 
