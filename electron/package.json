@@ -29,7 +29,7 @@
     "wait-on": "^8.0.5"
   },
   "build": {
-    "appId": "com.meowgit.opennote",
+    "appId": "com.meowgit.meownote",
     "productName": "meow[note]",
     "directories": {
       "output": "build"

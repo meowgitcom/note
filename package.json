@@ -1,5 +1,5 @@
 {
-  "name": "opennote",
+  "name": "meownote",
   "private": true,
   "workspaces": [
     "api",

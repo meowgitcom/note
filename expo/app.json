@@ -9,11 +9,11 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.meowgit.opennote"
+      "bundleIdentifier": "com.meowgit.meownote"
     },
     "android": {
       "edgeToEdgeEnabled": true,
-      "package": "com.meowgit.opennote"
+      "package": "com.meowgit.meownote"
     },
     "web": {
       "bundler": "metro",
