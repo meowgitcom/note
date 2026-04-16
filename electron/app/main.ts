@@ -44,7 +44,6 @@ function createWindow() {
   if (isDev) {
     // In development, load from Expo Metro bundler (web platform)
     mainWindow.loadURL("http://localhost:8081")
-    mainWindow.webContents.openDevTools()
   } else {
     // In production, load from bundled Expo web export
     const expoDistPath = path.join(process.resourcesPath, "expo-dist")

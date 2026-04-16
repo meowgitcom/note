@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun run build:patches && bun run build:electron && concurrently \"bun run dev:watch\" \"bun run dev:expo\" \"bun run dev:electron\"",
     "dev:watch": "bun scripts/watch.ts",
-    "dev:expo": "cd expo-patched && bun install && bun run dev:web",
+    "dev:expo": "cd expo-patched && bun install && BROWSER=none bun run dev:web",
     "dev:electron": "wait-on http://localhost:8081 && electron .",
     "fix": "oxfmt -c ../config/oxfmt.json && oxlint -c ../config/oxlint.json --fix && tsc --noEmit",
     "build": "bun run build:patches && bun run export:expo && bun run build:electron && electron-builder",
