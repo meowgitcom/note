@@ -4,7 +4,7 @@ import { dirname, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const API_ROOT = resolve(fileURLToPath(import.meta.url), "..")
-const ROUTES_DIR = resolve(API_ROOT, "routes")
+const ROUTES_DIR = resolve(API_ROOT, "pages")
 const OUT_FILE = resolve(API_ROOT, "router.ts")
 
 const isWatch = process.argv.includes("--watch")
@@ -17,24 +17,20 @@ type RouteEntry = {
 }
 
 const toRoutePath = (fileRelFromRoutesDir: string) => {
-  const noExt = fileRelFromRoutesDir.replace(/\.tsx?$/, "")
+  const noExt = fileRelFromRoutesDir.replace(/\.ts$/, "")
   const parts = noExt.split(sep)
 
-  // Single-name convention: routes/**/route.ts
-  // The filename itself is never part of the URL.
-  if (parts.at(-1) === "route") parts.pop()
+  const mapped = parts.flatMap((p) => {
+    if (p === "index") return []
 
-  const mapped = parts
-    .flatMap((p) => {
-      const catchAll = p.match(/^\[\.\.\.(.+)\]$/)
-      if (catchAll) return [`:${catchAll[1]}*`]
+    const catchAll = p.match(/^\[\.\.\.(.+)\]$/)
+    if (catchAll) return [`:${catchAll[1]}*`]
 
-      const param = p.match(/^\[(.+)\]$/)
-      if (param) return [`:${param[1]}`]
+    const param = p.match(/^\[(.+)\]$/)
+    if (param) return [`:${param[1]}`]
 
-      return [p]
-    })
-    .join("/")
+    return [p]
+  }).join("/")
 
   return mapped ? "/" + mapped : "/"
 }
@@ -42,7 +38,7 @@ const toRoutePath = (fileRelFromRoutesDir: string) => {
 const sanitizeVar = (s: string) =>
   "r_" +
   s
-    .replace(/\.tsx?$/, "")
+    .replace(/\.ts$/, "")
     .replace(/[^a-zA-Z0-9_]+/g, "_")
     .replace(/^_+/, "")
 
@@ -50,18 +46,16 @@ const main = async () => {
   await mkdir(ROUTES_DIR, { recursive: true })
 
   const files: string[] = []
-  for await (const file of new Bun.Glob("routes/**/*.{ts,tsx}").scan({ cwd: API_ROOT })) {
+  for await (const file of new Bun.Glob("pages/**/*.ts").scan({ cwd: API_ROOT })) {
     if (file.endsWith(".d.ts")) continue
-    // Routable modules are named exactly `route.ts`
-    if (!file.endsWith("/route.ts") && !file.endsWith("/route.tsx")) continue
     files.push(file)
   }
 
   files.sort()
 
   const entries: RouteEntry[] = files.map((fileRelFromApiRoot) => {
-    const fileRelFromRoutesDir = relative("routes", fileRelFromApiRoot)
-    const importPath = "./" + fileRelFromApiRoot.replace(/\.tsx?$/, "")
+    const fileRelFromRoutesDir = relative("pages", fileRelFromApiRoot)
+    const importPath = "./" + fileRelFromApiRoot.replace(/\.ts$/, "")
     return {
       fileRelFromApiRoot,
       importPath,
@@ -119,7 +113,7 @@ const main = async () => {
     await writeFile(OUT_FILE, next, "utf8")
   }
 
-  console.log(`Generated ${relative(API_ROOT, OUT_FILE)} with ${entries.length} route file(s)`) 
+  console.log(`Generated ${relative(API_ROOT, OUT_FILE)} with ${entries.length} route(s)`)
 }
 
 await main()

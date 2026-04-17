@@ -12,12 +12,15 @@ This runs `bun gen:routes` then `bun dev.ts`, which spawns a routes watcher and 
 
 ### File-based routing
 
-Route files live in `routes/**/route.ts`. The filename itself is never part of the URL.
+Route files live in `pages/**/*.ts`. The filename is part of the URL, except `index.ts`.
 
-- `routes/route.ts` → `GET /`
-- `routes/users/route.ts` → `GET /users`
-- `routes/users/[id]/route.ts` → `GET /users/:id`
-- `routes/[...rest]/route.ts` → `GET /*`
+- `pages/index.ts` → `GET /`
+- `pages/about.ts` → `GET /about`
+- `pages/blog/index.ts` → `GET /blog`
+- `pages/blog/[id].ts` → `GET /blog/:id`
+- `pages/author/[author_name]/name.ts` → `GET /author/:author_name/name`
+
+`index.ts` doesn't add a segment. `[param].ts` becomes `:param`. `[...rest].ts` becomes `:rest*`.
 
 Route files export named HTTP method handlers:
 
@@ -35,7 +38,7 @@ bun gen:routes        # generate router.ts once
 bun watch:routes      # generate and watch for changes (250ms polling)
 ```
 
-`gen:routes` scans `routes/**/route.ts` and writes `router.ts`. It skips the write if content is unchanged to avoid unnecessary rebuilds.
+`gen:routes` scans `pages/**/*.ts` (not `.tsx`) and writes `router.ts`. It skips the write if content is unchanged.
 
 ### Cloudflare
 
