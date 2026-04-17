@@ -1,14 +1,14 @@
 import { useColorScheme } from "react-native"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
-import Routes from "@/routes"
 import { useFonts, Geist_400Regular } from "@expo-google-fonts/geist"
 import { GeistMono_400Regular } from "@expo-google-fonts/geist-mono"
-import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper"
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper"
+import { Stack } from "expo-router"
 
-export default function App() {
+export default function RootLayout() {
   const colorScheme = useColorScheme()
 
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Geist_400Regular,
     GeistMono_400Regular,
   })
@@ -115,7 +115,12 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-          <Routes />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: theme.colors.background },
+            }}
+          />
         </SafeAreaView>
       </PaperProvider>
     </SafeAreaProvider>
