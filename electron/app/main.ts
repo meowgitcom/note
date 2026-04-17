@@ -5,6 +5,27 @@ import { promises as fs } from "fs"
 
 let mainWindow: BrowserWindow | null = null
 
+// Window control IPC (registered once; targets current mainWindow)
+ipcMain.on("window:minimize", () => {
+  mainWindow?.minimize()
+})
+
+ipcMain.on("window:maximize", () => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow?.maximize()
+  }
+})
+
+ipcMain.on("window:close", () => {
+  mainWindow?.close()
+})
+
+ipcMain.handle("window:isMaximized", () => {
+  return mainWindow?.isMaximized() ?? false
+})
+
 // IPC handlers for file system operations
 ipcMain.handle("fs:read", async (_, filePath: string) => {
   try {
@@ -34,6 +55,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,

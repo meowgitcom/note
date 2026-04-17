@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { watch } from "fs"
 import { cpSync, existsSync, readdirSync } from "fs"
-import { join, resolve, relative } from "path"
+import { join, resolve, relative, sep } from "path"
 
 const PATCHES_DIR = resolve(import.meta.dir, "../patches")
 const EXPO_DIR = resolve(import.meta.dir, "../../expo")
@@ -36,6 +36,29 @@ if (existsSync(PATCHES_DIR)) {
 }
 
 console.log(`📋 Ignoring ${patchedFiles.size} patched file(s)`)
+
+const syncPatchedFile = (filename: string) => {
+  // filename is relative to PATCHES_DIR and looks like : 
+  //   <patch-name>/path/inside/expo/root
+  // We want to copy it to expo-patched at : 
+  //   path/inside/expo/root
+  const parts = filename.split(sep)
+  if (parts.length < 2) return
+  parts.shift()
+  const relTarget = parts.join(sep)
+
+  const sourcePath = join(PATCHES_DIR, filename)
+  const targetPath = join(EXPO_PATCHED_DIR, relTarget)
+
+  if (!existsSync(sourcePath)) return
+
+  try {
+    cpSync(sourcePath, targetPath, { force: true })
+    console.log(`🩹 Patched : ${filename}`)
+  } catch (error) {
+    console.error(`❌ Failed to apply patch ${filename} : `, error)
+  }
+}
 
 // Watch for changes using Bun's native fs.watch
 const watcher = watch(EXPO_DIR, { recursive: true }, (event, filename) => {
@@ -75,6 +98,16 @@ const watcher = watch(EXPO_DIR, { recursive: true }, (event, filename) => {
     console.error(`❌ Failed to sync ${filename} : `, error)
   }
 })
+
+// Also watch patches so editing electron/patches updates expo-patched immediately.
+if (existsSync(PATCHES_DIR)) {
+  watch(PATCHES_DIR, { recursive: true }, (event, filename) => {
+    if (!filename) return
+    // Skip directories and temp files.
+    if (filename.endsWith("~") || filename.includes("/.")) return
+    syncPatchedFile(filename)
+  })
+}
 
 console.log("✅ Watching for changes... (Ctrl+C to stop)")
 
