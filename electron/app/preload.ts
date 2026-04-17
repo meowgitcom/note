@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron"
 
-// Make frameless window draggable like VS Code.
+// Make frameless window draggable.
 // We do this in preload (not React) so it works regardless of RN-web styling.
 window.addEventListener("DOMContentLoaded", () => {
   const apply = () => {

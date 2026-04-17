@@ -69,7 +69,7 @@ function TitleBar() {
     >
       <View style={styles.titleBarContent} pointerEvents="none">
         <Text style={[styles.titleText, isDark ? styles.titleTextDark : styles.titleTextLight]}>
-          meow[note]
+          note
         </Text>
       </View>
 
