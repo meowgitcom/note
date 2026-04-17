@@ -1,0 +1,9 @@
+name = "meownote-api"
+main = "worker.ts"
+
+# Elysia's Cloudflare Worker adapter requires at least this date.
+compatibility_date = "2025-06-01"
+
+# Uncomment and configure when you start using bindings.
+# [vars]
+# FOO = "bar"

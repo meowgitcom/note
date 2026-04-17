@@ -10,7 +10,10 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "export:web": "expo export --platform web"
+    "export:web": "expo export --platform web",
+    "build": "bun run export:web",
+    "deploy:cf": "wrangler pages deploy",
+    "dev:cf": "wrangler pages dev ./dist"
   },
   "dependencies": {
     "@expo-google-fonts/geist": "^0.4.1",
@@ -31,6 +34,7 @@
     "@types/react": "~19.1.0",
     "oxfmt": "^0.43.0",
     "oxlint": "^1.58.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "wrangler": "^4.20.5"
   }
 }

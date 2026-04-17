@@ -1,0 +1,8 @@
+name = "meownote-expo"
+pages_build_output_dir = "./dist"
+
+# Set this to today's date / your preference
+compatibility_date = "2026-04-17"
+
+# Optional, only if you add Pages Functions later
+# compatibility_flags = [ "nodejs_compat" ]
