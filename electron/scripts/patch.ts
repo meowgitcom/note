@@ -1,10 +1,11 @@
 #!/usr/bin/env bun
-import { readdirSync, cpSync, existsSync, rmSync, mkdirSync } from "node:fs"
+import { readdirSync, cpSync, existsSync, rmSync, mkdirSync, symlinkSync } from "node:fs"
 import { join, resolve, relative } from "node:path"
 
 const PATCHES_DIR = resolve(__dirname, "../patches")
 const EXPO_DIR = resolve(__dirname, "../../expo")
 const EXPO_PATCHED_DIR = resolve(__dirname, "../expo-patched")
+const EXPO_NODE_MODULES_DIR = resolve(__dirname, "../../expo/node_modules")
 
 console.log("🔧 Creating patched Expo app for Electron...")
 
@@ -36,6 +37,11 @@ cpSync(EXPO_DIR, EXPO_PATCHED_DIR, {
   },
 })
 console.log("✅ Expo app copied")
+
+if (existsSync(EXPO_NODE_MODULES_DIR)) {
+  symlinkSync(EXPO_NODE_MODULES_DIR, join(EXPO_PATCHED_DIR, "node_modules"), "dir")
+  console.log("🔗 Linked workspace node_modules")
+}
 
 // Now apply patches
 if (!existsSync(PATCHES_DIR)) {

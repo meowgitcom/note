@@ -5,10 +5,13 @@ import { GeistMono_400Regular } from "@expo-google-fonts/geist-mono"
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, IconButton, Text } from "react-native-paper"
 import { Stack } from "expo-router"
 import { useEffect, useState } from "react"
+import type { LocalDbSnapshot } from "db"
 
 declare global {
   interface Window {
     electronAPI: {
+      getDbSnapshot: () => Promise<LocalDbSnapshot>
+      resetDb: () => Promise<LocalDbSnapshot>
       readFile: (path: string) => Promise<string>
       writeFile: (path: string, content: string) => Promise<void>
       deleteFile: (path: string) => Promise<void>

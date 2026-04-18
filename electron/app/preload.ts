@@ -39,6 +39,9 @@ window.addEventListener("DOMContentLoaded", () => {
 // Expose protected methods that allow the renderer process to use
 // ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld("electronAPI", {
+  getDbSnapshot: () => ipcRenderer.invoke("db:getSnapshot"),
+  resetDb: () => ipcRenderer.invoke("db:reset"),
+
   // File system operations
   readFile: (path: string) => ipcRenderer.invoke("fs:read", path),
   writeFile: (path: string, content: string) => ipcRenderer.invoke("fs:write", path, content),

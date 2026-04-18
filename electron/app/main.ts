@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron"
 import * as path from "path"
 import * as isDev from "electron-is-dev"
 import { promises as fs } from "fs"
+import { getDesktopDbSnapshot, initializeDesktopDb, resetDesktopDb } from "./database"
 
 let mainWindow: BrowserWindow | null = null
 
@@ -24,6 +25,14 @@ ipcMain.on("window:close", () => {
 
 ipcMain.handle("window:isMaximized", () => {
   return mainWindow?.isMaximized() ?? false
+})
+
+ipcMain.handle("db:getSnapshot", async () => {
+  return getDesktopDbSnapshot()
+})
+
+ipcMain.handle("db:reset", async () => {
+  return resetDesktopDb()
 })
 
 // IPC handlers for file system operations
@@ -78,6 +87,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  initializeDesktopDb()
   createWindow()
 
   app.on("activate", () => {
