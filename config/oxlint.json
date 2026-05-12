@@ -1,7 +1,0 @@
-{
-  "ignorePatterns": ["node_modules/**", "dist/**", "build/**"],
-  "jsPlugins": ["./rules/colon.cjs"],
-  "rules": {
-    "meow/colon": "error"
-  }
-}
