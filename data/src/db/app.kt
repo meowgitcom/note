@@ -8,7 +8,17 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
-@Database(entities = [Page::class], version = 1, exportSchema = true)
+@Database(
+    entities = [
+        User::class,
+        Workspace::class,
+        WorkspaceMember::class,
+        Page::class,
+        Block::class
+   ],
+    version = 1,
+    exportSchema = true
+)
 @TypeConverters(AppConverters::class)
 abstract class AppDatabase : RoomDatabase() {}
 
