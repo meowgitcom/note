@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "kotlin": "cd .. && ./amper build --module server",
+    "copy": "mkdir -p ./dist && cp -r ../build/tasks/_server_linkJs/* ./dist/",
+    "dev": "bun run kotlin && bun run copy && wrangler dev"
+  },
+  "dependencies": {
+    "hono": "^4.12.18",
+    "wrangler": "^4.90.1"
+  }
+}
