@@ -1,9 +1,14 @@
-// @ts-ignore : kotlin bridge
-import { getWelcomeMessage, calculateScore } from "../dist/server.mjs"
-
 import { Hono } from "hono"
 
 const app = new Hono()
+
+function getWelcomeMessage(name: string): string {
+  return `Hello, ${name}! This message was generated in Kotlin.`
+}
+
+function calculateScore(points: number): number {
+  return points * 10
+}
 
 app.get("/", (c) => {
   const name = c.req.query("name") || "Guest"

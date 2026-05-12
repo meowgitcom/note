@@ -1,9 +1,7 @@
 {
   "scripts": {
-    "kotlin": "cd .. && ./amper build --module server",
-    "copy": "mkdir -p ./dist && cp -r ../build/tasks/_server_linkJs/* ./dist/",
-    "dev": "bun run kotlin && bun run copy && wrangler dev",
-    "deploy": "bun run kotlin && bun run copy && wrangler deploy",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "fix": "oxfmt -c config/oxfmt.json && oxlint -c config/oxlint.json --fix && tsc --noEmit",
     "generate": "bun scripts/generate.ts"
   },

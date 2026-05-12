@@ -55,7 +55,7 @@ async function processFile(hclFile: string): Promise<string[]> {
   const hclContent = fs.readFileSync(hclFile, "utf-8")
   const raw = (await parse(hclFile, hclContent)) as any
 
-  const moduleDir = path.join(__dirname, "../app", "data", moduleName)
+  const moduleDir = path.join(__dirname, "../", "data", moduleName)
   if (fs.existsSync(moduleDir)) {
     fs.rmSync(moduleDir, { recursive: true, force: true })
   }
@@ -266,7 +266,7 @@ async function processFile(hclFile: string): Promise<string[]> {
     fs.writeFileSync(filePath, code)
   }
 
-  const dbDir = path.join(__dirname, "../app", "data", "db")
+  const dbDir = path.join(__dirname, "../", "data", "db")
   if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true })
 
   let dbCode = `import { drizzle } from "drizzle-orm/d1"\n`
@@ -285,7 +285,7 @@ async function processFile(hclFile: string): Promise<string[]> {
 
   fs.writeFileSync(path.join(dbDir, `${moduleName}.ts`), dbCode)
 
-  const mainFile = path.join(__dirname, "../app", "data", "index.ts")
+  const mainFile = path.join(__dirname, "../", "data", "index.ts")
   let mainCode = fs.existsSync(mainFile) ? fs.readFileSync(mainFile, "utf-8") : ""
   for (const entity of allEntities) {
     mainCode += `export * from "./${moduleName}/${entity.toLowerCase()}"\n`
@@ -300,7 +300,7 @@ async function main() {
   const hclDir = path.join(__dirname, "../../data/hcl")
   const files = fs.readdirSync(hclDir).filter((f) => f.endsWith(".hcl"))
 
-  const dataDir = path.join(__dirname, "../app", "data")
+  const dataDir = path.join(__dirname, "../", "data")
   if (fs.existsSync(dataDir)) {
     fs.rmSync(dataDir, { recursive: true, force: true })
   }
