@@ -2,10 +2,17 @@
   "scripts": {
     "kotlin": "cd .. && ./amper build --module server",
     "copy": "mkdir -p ./dist && cp -r ../build/tasks/_server_linkJs/* ./dist/",
-    "dev": "bun run kotlin && bun run copy && wrangler dev"
+    "dev": "bun run kotlin && bun run copy && wrangler dev",
+    "deploy": "bun run kotlin && bun run copy && wrangler deploy",
+    "fix": "oxfmt -c config/oxfmt.json && oxlint -c config/oxlint.json --fix && tsc --noEmit"
   },
   "dependencies": {
     "hono": "^4.12.18",
     "wrangler": "^4.90.1"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.49.0",
+    "oxlint": "^1.64.0",
+    "typescript": "^6.0.3"
   }
 }

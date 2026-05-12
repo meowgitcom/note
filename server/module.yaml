@@ -9,4 +9,4 @@ settings:
   ktor:
     enabled: true
   kotlin:
-    optIns: [ kotlin.js.ExperimentalJsExport ]
+    optIns: [kotlin.js.ExperimentalJsExport]
