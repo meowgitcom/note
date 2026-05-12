@@ -311,14 +311,10 @@ object JsonParser {
     }
     convFile.writeText(convSb.toString().trim() + "\n}\n")
 
-    // 4. Main Aliases -> src/main.kt (Overwrites to keep it simple, or we could append)
+// 4. Main Aliases -> src/main.kt (Overwrites to keep it simple, or we could append)
     val mainFile = File("src/main.kt")
-    val mainSb = StringBuilder()
-    if (mainFile.exists()) {
-        mainSb.append(mainFile.readText().trim()).append("\n\n")
-    } else {
-        mainSb.append("import androidx.room.RoomDatabase\n\n")
-    }
+    mainFile.delete()
+    val mainSb = StringBuilder("import androidx.room.RoomDatabase\n\n")
     
     mainSb.append("// --- $moduleNameCap Module ---\n")
     schema.entities.forEach { mainSb.append("typealias ${it.name} = $entityPkg.${it.name}\n") }
