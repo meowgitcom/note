@@ -1,0 +1,16 @@
+product:
+  type: lib
+  platforms: [ jvm, android ]
+
+dependencies:
+  - androidx.room:room-runtime:2.7.0-alpha12
+  - androidx.sqlite:sqlite-bundled:2.5.0-alpha12
+  - org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
+
+settings:
+  kotlin:
+    ksp:
+      processors:
+        - androidx.room:room-compiler:2.7.0-alpha12
+      processorOptions:
+        room.schemaLocation: $PROJECT_DIR$/data/migrations

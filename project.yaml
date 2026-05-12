@@ -2,3 +2,4 @@ modules:
   - android
   - jvm
   - shared
+  - data
