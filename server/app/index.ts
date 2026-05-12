@@ -3,7 +3,7 @@ import { Hono } from "hono"
 const app = new Hono()
 
 function getWelcomeMessage(name: string): string {
-  return `Hello, ${name}! This message was generated in Kotlin.`
+  return `Hello, ${name}! This message was generated in javascript.`
 }
 
 function calculateScore(points: number): number {
