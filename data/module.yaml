@@ -13,4 +13,4 @@ settings:
       processors:
         - androidx.room:room-compiler:2.7.0-alpha12
       processorOptions:
-        room.schemaLocation: $PROJECT_DIR$/data/migrations
+        room.schemaLocation: migrations
