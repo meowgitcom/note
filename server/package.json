@@ -3,7 +3,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "fix": "oxfmt -c config/oxfmt.json && oxlint -c config/oxlint.json --fix && tsc --noEmit",
-    "generate": "bun scripts/generate.ts"
+    "generate": "bun scripts/generate.ts",
+    "migrate": "drizzle-kit generate && wrangler d1 migrations apply note --local"
   },
   "dependencies": {
     "@cdktf/hcl2json": "^0.21.0",

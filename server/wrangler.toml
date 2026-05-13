@@ -1,3 +1,9 @@
 name = "server"
 main = "app/index.ts"
 compatibility_date = "2026-05-12"
+
+[[d1_databases]]
+binding = "note"
+database_name = "note"
+database_id = "10ec5fed-bee5-42c7-ba15-a81eeb7a33ee"
+migrations_dir = "./data/migrations"
