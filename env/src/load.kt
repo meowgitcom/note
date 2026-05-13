@@ -2,7 +2,7 @@ package env
 
 import io.github.cdimascio.dotenv.dotenv
 
-object Env {
+object Load {
     private val loader = dotenv {
         filename = "app.env"
     }
