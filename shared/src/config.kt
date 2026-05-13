@@ -1,4 +1,4 @@
 package config
-import env.Env
+import env.Env.get
 
-val baseurl = Env["API_URL"]
+val baseurl = get("API_URL")
