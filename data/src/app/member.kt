@@ -32,11 +32,13 @@ import kotlinx.serialization.Serializable
         )
     ],
     indices = [Index("workspace_id"), Index("user_id")]
-) data class Member(
+) @Serializable data class Member(
     @ColumnInfo(name = "workspace_id") val workspaceId: String,
     @ColumnInfo(name = "user_id") val userId: String,
     val role: MemberRole = MemberRole.MEMBER,
-    @ColumnInfo(name = "joined_at", defaultValue = "CURRENT_TIMESTAMP") val joinedAt: String = ""
+    @ColumnInfo(name = "joined_at", defaultValue = "CURRENT_TIMESTAMP") val joinedAt: String = "",
+    @ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String = "",
+    @ColumnInfo(defaultValue = "0") val deleted: Boolean = false
 )
 
 @Serializable enum class MemberRole { OWNER, ADMIN, MEMBER, GUEST }
@@ -45,6 +47,12 @@ import kotlinx.serialization.Serializable
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(item: Member)
     @Update suspend fun update(item: Member)
     @Delete suspend fun delete(item: Member)
+
+    @Query("UPDATE workspace_members SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE workspace_id = :workspaceId AND user_id = :userId")
+    suspend fun softDelete(workspaceId: String, userId: String)
+
+    @Query("SELECT * FROM workspace_members WHERE updated_at > :timestamp")
+    suspend fun getChanges(timestamp: String): List<Member>
 
     @Query("SELECT * FROM workspace_members WHERE workspace_id = :workspaceId")
     fun getByWorkspaceId(workspaceId: String): Flow<List<Member>>

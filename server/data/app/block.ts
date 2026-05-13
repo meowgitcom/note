@@ -1,6 +1,6 @@
-import { sqliteTable, text, index } from "drizzle-orm/sqlite-core"
+import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core"
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import { DrizzleD1Database } from "drizzle-orm/d1"
 import { Page } from "./page"
 
@@ -25,6 +25,7 @@ export const Block = sqliteTable(
   "blocks",
   {
     content: text("content", { mode: "json" }).$type<BlockContent>(),
+    deleted: integer("deleted", { mode: "boolean" }).default(false),
     id: text("id").primaryKey(),
     page_id: text("page_id").references(() => Page.id, { onDelete: "cascade" }),
     parent_block_id: text("parent_block_id").references((): AnySQLiteColumn => Block.id, {
@@ -33,6 +34,7 @@ export const Block = sqliteTable(
     position: text("position"),
     style: text("style", { mode: "json" }).$type<BlockStyle>(),
     type: text("type"),
+    updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   },
   (table) => ({
     idx0: index("blocks_page_id_idx").on(table.page_id),
@@ -65,5 +67,13 @@ export class BlockDao {
 
   async getAll() {
     return this.db.select().from(Block).all()
+  }
+
+  async getChanges(timestamp: string) {
+    return this.db
+      .select()
+      .from(Block)
+      .where(sql`${Block.updated_at} > ${timestamp}`)
+      .all()
   }
 }

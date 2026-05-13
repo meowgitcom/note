@@ -1,6 +1,6 @@
 app {
   package = "data"
-  version = 1
+  version = 3
 }
 
 enum "UserType" {
@@ -52,13 +52,24 @@ data_class "BlockStyle" {
 entity "User" {
   table_name = "users"
   primary_key = "id"
-  
+
   column "id" { type = "String" }
   column "name" { type = "String" }
   column "image" { type = "String?" }
   column "type" { 
     type = "UserType"
     default = "UserType.PERSON" 
+  }
+  column "updated_at" { 
+    type = "String"
+    name = "updated_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+  column "deleted" { 
+    type = "Boolean"
+    default_value = "0"
+    default = "false" 
   }
 }
 
@@ -77,6 +88,17 @@ entity "Workspace" {
     name = "created_at"
     default_value = "CURRENT_TIMESTAMP"
     default = "\"\"" 
+  }
+  column "updated_at" { 
+    type = "String"
+    name = "updated_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+  column "deleted" { 
+    type = "Boolean"
+    default_value = "0"
+    default = "false" 
   }
 
   foreign_key {
@@ -112,6 +134,17 @@ entity "Member" {
     name = "joined_at"
     default_value = "CURRENT_TIMESTAMP"
     default = "\"\"" 
+  }
+  column "updated_at" { 
+    type = "String"
+    name = "updated_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+  column "deleted" { 
+    type = "Boolean"
+    default_value = "0"
+    default = "false" 
   }
 
   foreign_key {
@@ -163,6 +196,17 @@ entity "Page" {
     type = "PageMeta"
     default = "PageMeta()" 
   }
+  column "updated_at" { 
+    type = "String"
+    name = "updated_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+  column "deleted" { 
+    type = "Boolean"
+    default_value = "0"
+    default = "false" 
+  }
 
   foreign_key {
     entity = "Workspace"
@@ -205,6 +249,17 @@ entity "Block" {
     type = "BlockStyle"
     default = "BlockStyle()" 
   }
+  column "updated_at" { 
+    type = "String"
+    name = "updated_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+  column "deleted" { 
+    type = "Boolean"
+    default_value = "0"
+    default = "false" 
+  }
 
   foreign_key {
     entity = "Page"
@@ -223,3 +278,36 @@ entity "Block" {
   index { columns = ["page_id"] }
   index { columns = ["parent_block_id"] }
 }
+
+entity "Transaction" {
+  table_name = "transactions"
+  primary_key = "id"
+
+  column "id" { type = "String" }
+  column "workspace_id" { 
+    type = "String"
+    name = "workspace_id" 
+  }
+  column "user_id" { 
+    type = "String"
+    name = "user_id" 
+  }
+  column "seq" { 
+    type = "Long" 
+    name = "seq"
+  }
+  column "operations" { 
+    type = "String" 
+    name = "operations"
+  }
+  column "created_at" { 
+    type = "String"
+    name = "created_at"
+    default_value = "CURRENT_TIMESTAMP"
+    default = "\"\"" 
+  }
+
+  index { columns = ["workspace_id", "seq"] }
+}
+
+

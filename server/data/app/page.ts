@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core"
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import { DrizzleD1Database } from "drizzle-orm/d1"
 import { Workspace } from "./workspace"
 
@@ -16,12 +16,14 @@ export const Page = sqliteTable(
   {
     archived: integer("archived", { mode: "boolean" }).default(false),
     data_source_id: text("data_source_id"),
+    deleted: integer("deleted", { mode: "boolean" }).default(false),
     id: text("id").primaryKey(),
     meta: text("meta", { mode: "json" }).$type<PageMeta>(),
     parent_id: text("parent_id").references((): AnySQLiteColumn => Page.id, {
       onDelete: "set null",
     }),
     title: text("title").default("Untitled"),
+    updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
     workspace_id: text("workspace_id").references(() => Workspace.id, { onDelete: "cascade" }),
   },
   (table) => ({
@@ -55,5 +57,13 @@ export class PageDao {
 
   async getAll() {
     return this.db.select().from(Page).all()
+  }
+
+  async getChanges(timestamp: string) {
+    return this.db
+      .select()
+      .from(Page)
+      .where(sql`${Page.updated_at} > ${timestamp}`)
+      .all()
   }
 }

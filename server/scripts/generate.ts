@@ -261,6 +261,24 @@ async function processFile(hclFile: string): Promise<string[]> {
     code += `  async getAll() {\n`
     code += `    return this.db.select().from(${name}).all()\n`
     code += `  }\n`
+
+    if (name === "Transaction") {
+      code += `\n  async getPending(workspaceId: string) {\n`
+      code += `    return this.db.select().from(Transaction).where(sql\`\${Transaction.workspace_id} = \${workspaceId} AND \${Transaction.seq} = 0\`).all()\n`
+      code += `  }\n\n`
+      code += `  async getSince(workspaceId: string, lastSeq: number) {\n`
+      code += `    return this.db.select().from(Transaction).where(sql\`\${Transaction.workspace_id} = \${workspaceId} AND \${Transaction.seq} > \${lastSeq}\`).orderBy(Transaction.seq).all()\n`
+      code += `  }\n\n`
+      code += `  async getMaxSeq(workspaceId: string) {\n`
+      code += `    const result = await this.db.select({ seq: Transaction.seq }).from(Transaction).where(eq(Transaction.workspace_id, workspaceId)).orderBy(sql\`\${Transaction.seq} DESC\`).limit(1).get()\n`
+      code += `    return result?.seq ?? null\n`
+      code += `  }\n`
+    } else {
+      code += `\n  async getChanges(timestamp: string) {\n`
+      code += `    return this.db.select().from(${name}).where(sql\`\${${name}.updated_at} > \${timestamp}\`).all()\n`
+      code += `  }\n`
+    }
+
     code += `}\n`
 
     fs.writeFileSync(filePath, code)
@@ -286,11 +304,11 @@ async function processFile(hclFile: string): Promise<string[]> {
   fs.writeFileSync(path.join(dbDir, `${moduleName}.ts`), dbCode)
 
   const mainFile = path.join(__dirname, "../", "data", "index.ts")
-  let mainCode = fs.existsSync(mainFile) ? fs.readFileSync(mainFile, "utf-8") : ""
+  let mainCode = ""
   for (const entity of allEntities) {
     mainCode += `export * from "./${moduleName}/${entity.toLowerCase()}"\n`
   }
-  mainCode += `export { create${moduleNameCap}Database } from "./db/${moduleName}"\n`
+  mainCode += `export { create${moduleNameCap}Database, schema } from "./db/${moduleName}"\n`
   fs.writeFileSync(mainFile, mainCode)
 
   return allEntities

@@ -1,15 +1,17 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core"
-import { eq } from "drizzle-orm"
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
+import { eq, sql } from "drizzle-orm"
 import { DrizzleD1Database } from "drizzle-orm/d1"
 
 export const UserTypeValues = ["PERSON", "BOT"] as const
 export type UserType = (typeof UserTypeValues)[number]
 
 export const User = sqliteTable("users", {
+  deleted: integer("deleted", { mode: "boolean" }).default(false),
   id: text("id").primaryKey(),
   image: text("image"),
   name: text("name"),
   type: text("type"),
+  updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 })
 
 export class UserDao {
@@ -37,5 +39,13 @@ export class UserDao {
 
   async getAll() {
     return this.db.select().from(User).all()
+  }
+
+  async getChanges(timestamp: string) {
+    return this.db
+      .select()
+      .from(User)
+      .where(sql`${User.updated_at} > ${timestamp}`)
+      .all()
   }
 }

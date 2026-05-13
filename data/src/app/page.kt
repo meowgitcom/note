@@ -32,14 +32,16 @@ import kotlinx.serialization.json.JsonElement
         )
     ],
     indices = [Index("workspace_id"), Index("parent_id")]
-) data class Page(
+) @Serializable data class Page(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "workspace_id") val workspaceId: String,
     @ColumnInfo(name = "parent_id") val parentId: String? = null,
     @ColumnInfo(name = "data_source_id") val dataSourceId: String? = null,
     @ColumnInfo(defaultValue = "Untitled") val title: String = "Untitled",
     @ColumnInfo(defaultValue = "0") val archived: Boolean = false,
-    val meta: PageMeta = PageMeta()
+    val meta: PageMeta = PageMeta(),
+    @ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String = "",
+    @ColumnInfo(defaultValue = "0") val deleted: Boolean = false
 )
 
 @Serializable data class PageMeta(
@@ -53,6 +55,12 @@ import kotlinx.serialization.json.JsonElement
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(item: Page)
     @Update suspend fun update(item: Page)
     @Delete suspend fun delete(item: Page)
+
+    @Query("UPDATE pages SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id")
+    suspend fun softDelete(id: String)
+
+    @Query("SELECT * FROM pages WHERE updated_at > :timestamp")
+    suspend fun getChanges(timestamp: String): List<Page>
 
     @Query("SELECT * FROM pages WHERE id = :id")
     suspend fun getById(id: String): Page?

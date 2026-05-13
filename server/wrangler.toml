@@ -7,3 +7,11 @@ binding = "note"
 database_name = "note"
 database_id = "10ec5fed-bee5-42c7-ba15-a81eeb7a33ee"
 migrations_dir = "./migrations"
+
+[[durable_objects.bindings]]
+name = "SYNC_ROOM"
+class_name = "SyncRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["SyncRoom"]

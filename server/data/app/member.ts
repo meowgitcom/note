@@ -1,4 +1,4 @@
-import { sqliteTable, text, primaryKey, index } from "drizzle-orm/sqlite-core"
+import { sqliteTable, text, integer, primaryKey, index } from "drizzle-orm/sqlite-core"
 import { eq, sql, and } from "drizzle-orm"
 import { DrizzleD1Database } from "drizzle-orm/d1"
 import { User } from "./user"
@@ -10,8 +10,10 @@ export type MemberRole = (typeof MemberRoleValues)[number]
 export const Member = sqliteTable(
   "workspace_members",
   {
+    deleted: integer("deleted", { mode: "boolean" }).default(false),
     joined_at: text("joined_at").default(sql`CURRENT_TIMESTAMP`),
     role: text("role"),
+    updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
     user_id: text("user_id").references(() => User.id, { onDelete: "cascade" }),
     workspace_id: text("workspace_id").references(() => Workspace.id, { onDelete: "cascade" }),
   },
@@ -58,5 +60,13 @@ export class MemberDao {
 
   async getAll() {
     return this.db.select().from(Member).all()
+  }
+
+  async getChanges(timestamp: string) {
+    return this.db
+      .select()
+      .from(Member)
+      .where(sql`${Member.updated_at} > ${timestamp}`)
+      .all()
   }
 }

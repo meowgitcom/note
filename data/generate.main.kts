@@ -121,7 +121,7 @@ fun generate(schema: HclSchema) {
         if (entity.indices.isNotEmpty()) imports.add("androidx.room.Index")
         
         val allTypes = entity.columns.map { it.type } + relatedDataClasses.flatMap { dc -> dc.fields.map { it.type } }
-        if (allTypes.any { type -> schema.enums.any { it.name == type } || schema.dataClasses.any { it.name == type } }) imports.add("kotlinx.serialization.Serializable")
+        imports.add("kotlinx.serialization.Serializable")
         if (allTypes.any { it.contains("JsonElement") }) imports.add("kotlinx.serialization.json.JsonElement")
         imports.add("kotlinx.coroutines.flow.Flow")
 
@@ -148,7 +148,7 @@ fun generate(schema: HclSchema) {
         if (entity.indices.isNotEmpty()) {
             sb.append(",\n    indices = [${entity.indices.joinToString { "Index(${it.columns.joinToString { "\"$it\"" }})" }}]")
         }
-        sb.append("\n) data class ${entity.name}(\n")
+        sb.append("\n) @Serializable data class ${entity.name}(\n")
         val colsStr = entity.columns.joinToString(",\n") { col ->
             val fieldSb = StringBuilder("    ")
             if (col.isPrimaryKey && entity.primaryKeys.size == 1) fieldSb.append("@PrimaryKey ")
@@ -200,10 +200,40 @@ fun generate(schema: HclSchema) {
         }
 
         // DAO Generation
+        val hasDeletedColumn = entity.columns.any { it.name == "deleted" }
+        
         sb.append("\n@Dao interface ${entity.name}Dao {\n")
         sb.append("    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(item: ${entity.name})\n")
         sb.append("    @Update suspend fun update(item: ${entity.name})\n")
-        sb.append("    @Delete suspend fun delete(item: ${entity.name})\n\n")
+        sb.append("    @Delete suspend fun delete(item: ${entity.name})\n")
+        
+        if (hasDeletedColumn) {
+            if (entity.primaryKeys.size == 1) {
+                val pk = entity.primaryKeys[0]
+                val col = entity.columns.first { it.name == pk }
+                val propName = pk.snakeToCamelCase()
+                sb.append("\n    @Query(\"UPDATE ${entity.tableName} SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE $pk = :$propName\")\n")
+                sb.append("    suspend fun softDelete($propName: ${col.type})\n")
+            } else if (entity.name == "Member") {
+                sb.append("\n    @Query(\"UPDATE ${entity.tableName} SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE workspace_id = :workspaceId AND user_id = :userId\")\n")
+                sb.append("    suspend fun softDelete(workspaceId: String, userId: String)\n")
+            }
+        }
+        sb.append("\n")
+        
+        if (entity.name != "Transaction") {
+            sb.append("    @Query(\"SELECT * FROM ${entity.tableName} WHERE updated_at > :timestamp\")\n")
+            sb.append("    suspend fun getChanges(timestamp: String): List<${entity.name}>\n\n")
+        } else {
+            sb.append("    @Query(\"SELECT * FROM transactions WHERE workspace_id = :workspaceId AND seq = 0 ORDER BY created_at ASC\")\n")
+            sb.append("    suspend fun getPending(workspaceId: String): List<Transaction>\n\n")
+            
+            sb.append("    @Query(\"SELECT * FROM transactions WHERE workspace_id = :workspaceId AND seq > :lastSeq ORDER BY seq ASC\")\n")
+            sb.append("    suspend fun getSince(workspaceId: String, lastSeq: Long): List<Transaction>\n\n")
+
+            sb.append("    @Query(\"SELECT MAX(seq) FROM transactions WHERE workspace_id = :workspaceId\")\n")
+            sb.append("    suspend fun getMaxSeq(workspaceId: String): Long?\n\n")
+        }
         
         if (entity.primaryKeys.size == 1) {
             val pk = entity.primaryKeys[0]

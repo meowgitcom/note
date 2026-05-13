@@ -15,9 +15,10 @@ import data.app.*
         Workspace::class,
         Member::class,
         Page::class,
-        Block::class
+        Block::class,
+        Transaction::class
    ],
-    version = 1,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(AppConverters::class)
@@ -27,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun memberDao(): MemberDao
     abstract fun pageDao(): PageDao
     abstract fun blockDao(): BlockDao
+    abstract fun transactionDao(): TransactionDao
 }
 
 fun <T : RoomDatabase> createAppDatabase(builder: RoomDatabase.Builder<T>): T {

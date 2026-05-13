@@ -32,14 +32,16 @@ import kotlinx.serialization.json.JsonElement
         )
     ],
     indices = [Index("page_id"), Index("parent_block_id")]
-) data class Block(
+) @Serializable data class Block(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "page_id") val pageId: String,
     @ColumnInfo(name = "parent_block_id") val parentBlockId: String? = null,
     val position: String,
     val type: String,
     val content: BlockContent = BlockContent(),
-    val style: BlockStyle = BlockStyle()
+    val style: BlockStyle = BlockStyle(),
+    @ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String = "",
+    @ColumnInfo(defaultValue = "0") val deleted: Boolean = false
 )
 
 @Serializable data class BlockContent(
@@ -63,6 +65,12 @@ import kotlinx.serialization.json.JsonElement
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(item: Block)
     @Update suspend fun update(item: Block)
     @Delete suspend fun delete(item: Block)
+
+    @Query("UPDATE blocks SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id")
+    suspend fun softDelete(id: String)
+
+    @Query("SELECT * FROM blocks WHERE updated_at > :timestamp")
+    suspend fun getChanges(timestamp: String): List<Block>
 
     @Query("SELECT * FROM blocks WHERE id = :id")
     suspend fun getById(id: String): Block?
