@@ -22,7 +22,7 @@ data class HclEntity(
     val indices: List<HclIndex>
 )
 
-class HclSchema(val packageName: String, val moduleName: String) {
+class HclSchema(val packageName: String, val moduleName: String, val version: Int) {
     val enums = mutableListOf<HclEnum>()
     val dataClasses = mutableListOf<HclDataClass>()
     val entities = mutableListOf<HclEntity>()
@@ -36,7 +36,8 @@ fun parseHcl(file: File): HclSchema {
     
     val app = raw["app"] as? Map<String, Any>
     val pkg = app?.get("package")?.toString() ?: "data"
-    val schema = HclSchema(pkg, moduleName)
+    val version = (app?.get("version") as? Number)?.toInt() ?: 1
+    val schema = HclSchema(pkg, moduleName, version)
 
     // Parse Enums
     (raw["enum"] as? Map<String, Any>)?.forEach { (name, body) ->
@@ -252,7 +253,7 @@ fun generate(schema: HclSchema) {
     dbSb.append("@Database(\n    entities = [\n")
     schema.entities.forEach { dbSb.append("        ${it.name}::class,\n") }
     dbSb.deleteRange(dbSb.length - 2, dbSb.length - 1)
-    dbSb.append("   ],\n    version = 1,\n    exportSchema = true\n)\n")
+    dbSb.append("   ],\n    version = ${schema.version},\n    exportSchema = true\n)\n")
     dbSb.append("@TypeConverters(${moduleNameCap}Converters::class)\n")
     dbSb.append("abstract class ${moduleNameCap}Database : RoomDatabase() {\n")
     schema.entities.forEach { entity ->

@@ -1,5 +1,6 @@
 app {
   package = "data"
+  version = 1
 }
 
 enum "UserType" {
