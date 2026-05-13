@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import config.baseurl
 
 @Composable
 fun Screen() {
@@ -16,6 +17,7 @@ fun Screen() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             BasicText("Hello, ${getWorld()}!")
+            BasicText("API URL : $baseurl")
         }
     }
 }

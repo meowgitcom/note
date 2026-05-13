@@ -3,3 +3,4 @@ modules:
   - jvm
   - shared
   - data
+  - env
