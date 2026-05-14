@@ -187,6 +187,11 @@ entity "Page" {
     default_value = "Untitled"
     default = "\"Untitled\"" 
   }
+  column "position" {
+      type = "String"
+      default_value = ""
+      default = "\"\""
+  }
   column "archived" { 
     type = "Boolean"
     default_value = "0"

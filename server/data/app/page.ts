@@ -22,6 +22,7 @@ export const Page = sqliteTable(
     parent_id: text("parent_id").references((): AnySQLiteColumn => Page.id, {
       onDelete: "set null",
     }),
+    position: text("position").default(""),
     title: text("title").default("Untitled"),
     updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
     workspace_id: text("workspace_id").references(() => Workspace.id, { onDelete: "cascade" }),

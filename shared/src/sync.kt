@@ -14,6 +14,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
@@ -24,8 +25,8 @@ import kotlinx.serialization.json.*
 
 @Serializable
 data class Operation(
-    val command: String, // "set", "update", "delete"
-    val table: String,   // "User", "Workspace", "Page", "Block"
+    val command: String,
+    val table: String,
     val id: String,
     val data: JsonObject? = null
 )
@@ -60,43 +61,33 @@ class SyncManager(private val db: AppDatabase, private val workspaceId: String) 
         }
     }
 
-    /**
-     * Rebase local state:
-     * 1. Apply new remote transactions.
-     * 2. Re-apply local pending transactions (seq=0) against new state.
-     * 3. Mark successfully rebased transactions for push.
-     */
     private suspend fun rebase(remoteTxs: List<Transaction>) {
-        db.runInTransaction {
-            remoteTxs.forEach { tx ->
-                applyTransaction(tx)
-                if (tx.seq > lastSeq) lastSeq = tx.seq
+        remoteTxs.forEach { tx ->
+            applyTransaction(tx)
+            if (tx.seq > lastSeq) lastSeq = tx.seq
+        }
+
+        val pendingLocal = db.transactionDao().getPending(workspaceId)
+
+        pendingLocal.forEach { localTx ->
+            val ops = try {
+                json.decodeFromString<List<Operation>>(localTx.operations)
+            } catch (e: Exception) {
+                return@forEach
             }
 
-            val pendingLocal = db.transactionDao().getPending(workspaceId)
-
-            pendingLocal.forEach { localTx ->
-                val ops = try {
-                    json.decodeFromString<List<Operation>>(localTx.operations)
-                } catch (e: Exception) {
-                    return@forEach
-                }
-
-                val validOps = ops.filter { op -> validateOperation(op) }
-                if (validOps.isNotEmpty()) {
-                    validOps.forEach { applyOperation(it) }
-                    // Update local transaction with validOps (remove invalid ones)
-                    val updatedTx = localTx.copy(operations = json.encodeToString<List<Operation>>(validOps))
-                    db.transactionDao().update(updatedTx)
-                } else {
-                    // All operations invalid - delete the pending transaction
-                    db.transactionDao().delete(localTx)
-                }
+            val validOps = ops.filter { op -> validateOperation(op) }
+            if (validOps.isNotEmpty()) {
+                validOps.forEach { applyOperation(it) }
+                val updatedTx = localTx.copy(operations = json.encodeToString<List<Operation>>(validOps))
+                db.transactionDao().update(updatedTx)
+            } else {
+                db.transactionDao().delete(localTx)
             }
         }
     }
 
-    private fun validateOperation(op: Operation): Boolean {
+    private suspend fun validateOperation(op: Operation): Boolean {
         return when (op.table) {
             "User" -> {
                 if (op.command == "delete") {
@@ -127,7 +118,6 @@ class SyncManager(private val db: AppDatabase, private val workspaceId: String) 
     }
 
     private suspend fun applyOperation(op: Operation) {
-        val id = op.id
         val data = op.data ?: return
 
         when (op.table) {
@@ -169,7 +159,7 @@ class SyncManager(private val db: AppDatabase, private val workspaceId: String) 
                 setBody(pendingTxs.map { tx ->
                     mapOf(
                         "id" to tx.id,
-                        "user_id" to tx.user_id,
+                        "user_id" to tx.userId,
                         "operations" to tx.operations
                     )
                 })
@@ -177,7 +167,6 @@ class SyncManager(private val db: AppDatabase, private val workspaceId: String) 
 
             if (response.status.isSuccess()) {
                 val result = response.body<SyncResponse>()
-                // Mark transactions as synced by removing them (they're now on server)
                 pendingTxs.forEach { tx ->
                     db.transactionDao().delete(tx)
                 }

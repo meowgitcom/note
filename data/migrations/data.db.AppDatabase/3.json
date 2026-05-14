@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "092c86270f489bf828590216a6de72ee",
+    "identityHash": "10e976a5626abc65bfcf5a6c3db590f2",
     "entities": [
       {
         "tableName": "users",
@@ -202,7 +202,7 @@
       },
       {
         "tableName": "pages",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `workspace_id` TEXT NOT NULL, `parent_id` TEXT, `data_source_id` TEXT, `title` TEXT NOT NULL DEFAULT 'Untitled', `archived` INTEGER NOT NULL DEFAULT 0, `meta` TEXT NOT NULL, `updated_at` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, `deleted` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`), FOREIGN KEY(`workspace_id`) REFERENCES `workspaces`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`parent_id`) REFERENCES `pages`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `workspace_id` TEXT NOT NULL, `parent_id` TEXT, `data_source_id` TEXT, `title` TEXT NOT NULL DEFAULT 'Untitled', `position` TEXT NOT NULL DEFAULT '', `archived` INTEGER NOT NULL DEFAULT 0, `meta` TEXT NOT NULL, `updated_at` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, `deleted` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`), FOREIGN KEY(`workspace_id`) REFERENCES `workspaces`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`parent_id`) REFERENCES `pages`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -232,6 +232,13 @@
             "affinity": "TEXT",
             "notNull": true,
             "defaultValue": "'Untitled'"
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "archived",
@@ -475,7 +482,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '092c86270f489bf828590216a6de72ee')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '10e976a5626abc65bfcf5a6c3db590f2')"
     ]
   }
 }

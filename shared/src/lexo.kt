@@ -3,7 +3,7 @@ package sync
 import java.util.Random
 
 object LexoRank {
-    private const ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    private const val ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     private val random = Random()
 
     fun between(prev: String?, next: String?): String {

@@ -38,6 +38,7 @@ import kotlinx.serialization.json.JsonElement
     @ColumnInfo(name = "parent_id") val parentId: String? = null,
     @ColumnInfo(name = "data_source_id") val dataSourceId: String? = null,
     @ColumnInfo(defaultValue = "Untitled") val title: String = "Untitled",
+    @ColumnInfo(defaultValue = "") val position: String = "",
     @ColumnInfo(defaultValue = "0") val archived: Boolean = false,
     val meta: PageMeta = PageMeta(),
     @ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String = "",
