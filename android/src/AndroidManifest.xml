@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application>
+    <application
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:label="meow note"
+    >
         <activity android:name="hello.world.Main"
                   android:exported="true">
             <intent-filter>

@@ -7,3 +7,7 @@ dependencies:
 settings:
   compose: enabled
   junit: junit-4
+  android:
+    namespace: com.meowgit.note
+    versionCode: 1
+    versionName: "0.0.1"
