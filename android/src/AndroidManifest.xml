@@ -4,9 +4,11 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:label="meow note"
     >
-        <activity android:name="hello.world.Main"
-                  android:exported="true">
-            <intent-filter>
+        <activity android:name="meow.note.Main"
+                  android:exported="true"
+                  android:theme="@android:style/Theme.Material.NoActionBar"
+        >
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.isSystemInDarkTheme
 import shared.config.baseurl
-import shared.color.Colors
+import shared.style.Colors
 
 @Composable
 fun Screen() {

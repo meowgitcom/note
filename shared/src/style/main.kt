@@ -1,4 +1,4 @@
-package shared.color
+package shared.style
 
 import androidx.compose.ui.graphics.Color
 
