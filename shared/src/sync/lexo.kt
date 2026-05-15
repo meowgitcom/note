@@ -1,4 +1,4 @@
-package sync
+package shared.sync
 
 import java.util.Random
 

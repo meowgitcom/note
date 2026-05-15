@@ -1,3 +1,5 @@
+package shared.color
+
 import androidx.compose.ui.graphics.Color
 
 data class Palette(

@@ -1,4 +1,4 @@
-package sync
+package shared.sync
 
 import AppDatabase
 import Transaction
@@ -7,7 +7,7 @@ import Workspace
 import Member
 import Page
 import Block
-import config.baseurl
+import shared.config.baseurl
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*

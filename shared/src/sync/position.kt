@@ -1,4 +1,4 @@
-package sync
+package shared.sync
 
 import data.app.Block
 import data.app.Page
