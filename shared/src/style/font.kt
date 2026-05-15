@@ -1,4 +1,5 @@
 package shared.style
+
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import org.jetbrains.compose.resources.Font
