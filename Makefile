@@ -10,4 +10,4 @@ migrate:
 	./amper build --module data
 
 env:
-	cp ./env/resources/env.example ./env/resources/app.env
+	cp ./env/resources/.env.example ./env/resources/app.env
