@@ -1,9 +1,0 @@
-{
-  "files": [],
-  "references": [
-    { "path": "./env" },
-    { "path": "./api" },
-    { "path": "./electron" },
-    { "path": "./expo" }
-  ]
-}

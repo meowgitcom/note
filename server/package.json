@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "fix": "oxfmt -c config/oxfmt.json && oxlint -c config/oxlint.json --fix && tsc --noEmit",
+    "generate": "bun scripts/generate.ts",
+    "migrate": "drizzle-kit generate && wrangler d1 migrations apply note --local"
+  },
+  "dependencies": {
+    "@cdktf/hcl2json": "^0.21.0",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.18",
+    "wrangler": "^4.90.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250503.1",
+    "@types/bun": "^1.3.13",
+    "drizzle-kit": "^0.31.10",
+    "oxfmt": "^0.49.0",
+    "oxlint": "^1.64.0",
+    "typescript": "^6.0.3"
+  }
+}
